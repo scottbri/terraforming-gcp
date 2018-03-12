@@ -154,6 +154,11 @@ variable "create_gcs_buckets" {
   default     = true
 }
 
+variable "blobstore_service_account_key" {
+  description = "The GCP service account key for the PAS blobstore"
+  default     = ""
+}
+
 /*****************************
  * PKS Options *
  *****************************/
