@@ -9,7 +9,9 @@ resource "google_compute_firewall" "pks-master" {
     ports    = ["8443"]
   }
 
-  target_tags = ["master"]
+  target_tags = ["master", "${var.env_name}-vms"]
+
+  source_ranges = ["0.0.0.0/0"]
 }
 
 // Allow access to PKS API
@@ -23,7 +25,9 @@ resource "google_compute_firewall" "pks-api" {
     ports    = ["9021", "8443"]
   }
 
-  target_tags = ["${var.env_name}-pks-api"]
+  target_tags = ["pivotal-container-service", "${var.env_name}-vms"]
+
+  source_ranges = ["0.0.0.0/0"]
 }
 
 // Allow open access between internal VMs for a PKS deployment
@@ -46,6 +50,6 @@ resource "google_compute_firewall" "pks-internal" {
 
   source_ranges = [
     "${google_compute_subnetwork.pks-subnet.ip_cidr_range}",
-    "${google_compute_subnetwork.pks-services-subnet.ip_cidr_range}"
+    "${google_compute_subnetwork.pks-services-subnet.ip_cidr_range}",
   ]
 }
