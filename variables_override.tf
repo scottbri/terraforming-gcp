@@ -27,3 +27,13 @@ variable "pks_services_cidr" {
   description = "cidr for pks services subnet"
   default     = "172.20.8.0/24"
 }
+
+variable "jumpbox" {
+  description = "Create a jumpbox."
+  default     = true
+}
+
+variable "jumpbox_init_script" {
+  description = "Path to the script for initiliazing the jumpbox vm."
+  default     = "./jumpbox-init.sh"
+}

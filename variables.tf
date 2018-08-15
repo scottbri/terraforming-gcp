@@ -201,5 +201,5 @@ variable "jumpbox" {
 
 variable "jumpbox_init_script" {
   description = "Path to the script for initiliazing the jumpbox vm."
-  default     = ""
+  default     = "./jumpbox-init.sh"
 }
