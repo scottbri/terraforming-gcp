@@ -175,8 +175,12 @@ You can use the jumpbox to save your home bandwidth when installing tiles to Ops
 
 To install the PKS tile for example, do the following:
 - login to the jumpbox via the process above
-- cd ~/work
-- pcftools/pivnet-download.sh	# this will give you the command line syntax needed to download from PivNet
+
+```bash
+cd ~/work
+pcftools/pivnet-download.sh	# this will give you the command line syntax needed to download from PivNet
+```
+
 - login to network.pivotal.io
 - click your username in the top right --> Edit Profile
 - record your LEGACY API TOKEN [DEPRECATED]
