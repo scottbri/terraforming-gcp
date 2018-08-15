@@ -171,6 +171,8 @@ chmod 600 /tmp/jumpbox.key
 ssh ubuntu@jumpbox.environment.example.com -i /tmp/jumpbox.key
 ```
 
+## Upload the PKS tile into Ops Manager
+
 You can use the jumpbox to save your home bandwidth when installing tiles to Ops Manager.  A collection of pcf tools from http://github.com/scottbri/pcftools are staged in ~/work/pcftools.  Also the 'om' Ops Manager CLI is installed in ~/bin.
 
 To install the PKS tile for example, you'll use a tool on the jumpbox ~/work/pcftools/pivnet-download.sh
