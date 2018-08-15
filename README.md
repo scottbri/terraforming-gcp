@@ -173,13 +173,16 @@ ssh ubuntu@jumpbox.environment.example.com -i /tmp/jumpbox.key
 
 You can use the jumpbox to save your home bandwidth when installing tiles to Ops Manager.  A collection of pcf tools from http://github.com/scottbri/pcftools are staged in ~/work/pcftools.  Also the 'om' Ops Manager CLI is installed in ~/bin.
 
-To install the PKS tile for example, do the following:
-- login to the jumpbox via the process above
-
+To install the PKS tile for example, you'll use a tool on the jumpbox ~/work/pcftools/pivnet-download.sh
 ```bash
-cd ~/work
-pcftools/pivnet-download.sh	# this will give you the command line syntax needed to download from PivNet
+Usage: pcftools/pivnet-download.sh <Auth_Token> <API_URL> <Filename>
+
+where:
+	Auth_Token: the LEGACY API TOKEN [DEPRECATED] from Pivnet
+	API_URL:    the API Download URL from the Pivnet info box
+	Filename:   the file name from the Pivnet info box
 ```
+
 To get the above information:
 - login to network.pivotal.io
 - click your username in the top right --> Edit Profile
@@ -191,15 +194,18 @@ To get the above information:
 - return to the Pivotal Container Service (PKS) page
 - In the bottom right of the screen click on the Stem Cells version link
 - Download the "light" stemcell appropriate for your IaaS (GCP)
-- return to the command line and execute
+- return to the command line and login to the jumpbox per the instructions above
 
 ```bash
+which om 	# to verify ~/bin/om is in your path.. make it so if not
+
+cd ~/work
+
 # Download the PKS tile with this command.  It's about 4GB in size.
 pcftools/pivnet-download.sh <paste API TOKEN> <API Download URL> <filename>
 
 # when the download is complete, upload the file to Ops Manager
 # this tool requires the om 
-which om 	# to verify ~/bin/om is in your path
 pcftools/upload-product.sh <FQDN of ops manager> <username> <password> <filename-just-downloaded>
 
 # when the upload is complete, stage the tile on Ops Manager
