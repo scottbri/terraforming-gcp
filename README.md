@@ -235,7 +235,7 @@ You will need to log into Ops Manager to grab various credentials and informatio
 
 ```bash
 # create a SOCKS5 proxy through the jumpbox referenced above
-ssh -N -D 9999 ubuntu@jumpbox.environment.example.com -i jumpbox.key -f
+ssh -N -D 9999 ubuntu@jumpbox.environment.example.com -i /tmp/jumpbox.key -f
 
 # let the bosh cli know about the proxy
 export BOSH_ALL_PROXY=socks5://localhost:9999
