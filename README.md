@@ -252,6 +252,7 @@ bosh -e <short-name> log-in
 bosh -e <short-name> env
 bosh -e <short-name> events
 bosh -e <short-name> deployments
+```
 
 ## Further reading on deploying PKS
 Create a user in PKS via the uaac client: https://docs.pivotal.io/runtimes/pks/1-1/manage-users.html#uaa-scopes
