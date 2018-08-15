@@ -56,7 +56,8 @@ region           = "us-central1"
 zones            = ["us-central1-a", "us-central1-b", "us-central1-c"]
 dns_suffix       = "gcp.some-project.cf-app.com"
 opsman_image_url = "https://storage.googleapis.com/ops-manager-us/pcf-gcp-2.0-build.264.tar.gz"
-
+jumpbox          = "true"
+pks              = "true"
 buckets_location = "US"
 
 ssl_cert = <<SSL_CERT
@@ -159,3 +160,47 @@ terraform destroy
 ## Configuring Operations Manager
 
 Once you've run terraform successfully you should find a new directory in your working path called `files` in there will be a file `opsman-gcp-config` which will describe how to configure the GCP tile in opsman using the outputs of this deployment.
+
+# Then what?
+## SSH into the jumpbox
+A jumpbox can be created by setting jumpbox = "true" in the terraform.tfvars.  It will reside on the management network along side the ops manager / bosh director.  The default user will be ubuntu and the jumpbox will be configured into the DNS zone created for your environment.  The private key required is generated from `terraform output ops_manager_ssh_private_key > jumpbox.key`.  
+
+```bash
+terrraform output ops_manager_ssh_private_key > ./jumpbox.key
+chmod 400 jumpbox.key
+ssh ubuntu@jumpbox.environment.example.com -i ./jumpbox.key
+```
+
+## Connecting BOSH CLI to the BOSH Director
+You will need to log into Ops Manager to grab various credentials and information needed.  Also, you'll need to create an SSH tunnel through the jumpbox configured above to connect to the BOSH director over the internal IP.
+
+- Login to Ops Manager
+- Click on the BOSH Director Tile, and then on the Status Tab
+- Record the Bosh Director IP Address <Bosh_Director_IP_Addr>
+- Click on the Credentials Tab
+- Record the username and password for the "Uaa Admin User Credentials"
+- Click on your username in the top right of the screen, and then on Settings
+- Click on Advanced [Settings] --> Download Root CA Cert
+- Save into some file name of your choice <Root_CA_Cert_File>
+- follow the below commands
+
+```bash
+# create a SOCKS5 proxy through the jumpbox referenced above
+ssh -N -D 9999 ubuntu@jumpbox.environment.example.com -i jumpbox.key -f
+
+# let the bosh cli know about the proxy
+export BOSH_ALL_PROXY=socks5://localhost:9999
+
+# alias the bosh director with the CA Cert captured above
+bosh -e <Bosh_Director_IP_Addr> alias-env <short-name> --ca-cert <Root_CA_Cert_File>
+
+# Log-in to the director with the Uaa credentials captured above
+bosh -e <short-name> log-in 
+# Email (): is the Uaa username (likely admin)
+# Password (): is the Uaa Credentials password long string
+
+# Verify you're logged in
+bosh -e <short-name> env
+bosh -e <short-name> events
+bosh -e <short-name> deployments
+
