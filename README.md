@@ -180,7 +180,7 @@ To install the PKS tile for example, do the following:
 cd ~/work
 pcftools/pivnet-download.sh	# this will give you the command line syntax needed to download from PivNet
 ```
-
+To get the above information:
 - login to network.pivotal.io
 - click your username in the top right --> Edit Profile
 - record your LEGACY API TOKEN [DEPRECATED]
