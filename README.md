@@ -166,10 +166,47 @@ Once you've run terraform successfully you should find a new directory in your w
 A jumpbox can be created by setting jumpbox = "true" in the terraform.tfvars.  It will reside on the management network along side the ops manager / bosh director.  The default user will be ubuntu and the jumpbox will be configured into the DNS zone created for your environment.  The private key required is generated from `terraform output ops_manager_ssh_private_key > jumpbox.key`.  
 
 ```bash
-terrraform output ops_manager_ssh_private_key > ./jumpbox.key
-chmod 400 jumpbox.key
-ssh ubuntu@jumpbox.environment.example.com -i ./jumpbox.key
+terraform output ops_manager_ssh_private_key > /tmp/jumpbox.key
+chmod 600 /tmp/jumpbox.key
+ssh ubuntu@jumpbox.environment.example.com -i /tmp/jumpbox.key
 ```
+
+You can use the jumpbox to save your home bandwidth when installing tiles to Ops Manager.  A collection of pcf tools from http://github.com/scottbri/pcftools are staged in ~/work/pcftools.  Also the 'om' Ops Manager CLI is installed in ~/bin.
+
+To install the PKS tile for example, do the following:
+- login to the jumpbox via the process above
+- cd ~/work
+- pcftools/pivnet-download.sh	# this will give you the command line syntax needed to download from PivNet
+- login to network.pivotal.io
+- click your username in the top right --> Edit Profile
+- record your LEGACY API TOKEN [DEPRECATED]
+- return to the network.pivotal.io homepage and search for "pks"
+- inside the Pivotal Container Service (PKS) page, click the "i" information image to the right of "pivotal-container-service-....pivotal"
+- record the API Download URL (https://network.pivotal.io/api/...)
+- record the File name (pivotal-container-service...pivotal)
+- return to the Pivotal Container Service (PKS) page
+- In the bottom right of the screen click on the Stem Cells version link
+- Download the "light" stemcell appropriate for your IaaS (GCP)
+- return to the command line and execute
+
+```bash
+# Download the PKS tile with this command.  It's about 4GB in size.
+pcftools/pivnet-download.sh <paste API TOKEN> <API Download URL> <filename>
+
+# when the download is complete, upload the file to Ops Manager
+# this tool requires the om 
+which om 	# to verify ~/bin/om is in your path
+pcftools/upload-product.sh <FQDN of ops manager> <username> <password> <filename-just-downloaded>
+
+# when the upload is complete, stage the tile on Ops Manager
+# This command is user interactive.  Follow the prompts provided.
+pcftools/stage-product.sh <FQDN of ops manager> <username> <password>
+```
+
+Now the PKS Tile should be visible in Ops Manager.  Refresh that page to see it and begin configuring it.
+
+Once you're done configuring it, click on the link Missing Stemcell in the center of the tile.  Upload the stemcell you downloaded from PivNet.  (It should be small if you used the Lite version).
+
 
 ## Connecting BOSH CLI to the BOSH Director
 You will need to log into Ops Manager to grab various credentials and information needed.  Also, you'll need to create an SSH tunnel through the jumpbox configured above to connect to the BOSH director over the internal IP.
