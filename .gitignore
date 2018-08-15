@@ -1,5 +1,8 @@
 *.terraform
 *.tfstate.*
 *.tfstate
-terraform.key.json
+*.key.json
 *.tfvars
+plan
+files/
+ssl-out/
