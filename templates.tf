@@ -39,5 +39,6 @@ resource "template_dir" "config" {
     pks_hostname                          = "${module.pks.domain}"
     pks_master_node_service_account_email = "${module.pks.pks_master_node_service_account_email}"
     pks_worker_node_service_account_email = "${module.pks.pks_worker_node_service_account_email}"
+    pks_api_lb_name                       = "${module.pks.pks_lb_backend_name}"
   }
 }

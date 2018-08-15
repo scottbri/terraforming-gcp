@@ -88,3 +88,4 @@ GCP Worker Service Account ID: ${pks_worker_node_service_account_email}
 ## Errands
 
 ## Resource Config
+PKS TCP Load Balancer : tcp:${pks_api_lb_name}
